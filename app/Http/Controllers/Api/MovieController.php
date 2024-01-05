@@ -25,10 +25,10 @@ class MovieController extends Controller
 
         $data   = Movie::latest();
 
-        if (request('rating') == 'All') {
+        if (request('operator') != 'All') {
             $data->where('rating', request('operator'), request('rating'));
         }
-        
+
         return new ApiResource(true, 'List Data', $data->paginate(5));
     }
 
