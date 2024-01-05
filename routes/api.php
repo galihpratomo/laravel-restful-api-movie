@@ -18,3 +18,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::apiResource('/movie', App\Http\Controllers\Api\MovieController::class);
+Route::post('movie/json', 'App\Http\Controllers\Api\MovieController@index');

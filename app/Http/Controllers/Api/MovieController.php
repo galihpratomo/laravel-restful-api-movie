@@ -12,11 +12,24 @@ use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
-    public function index()
+    public function index(Request $req)
     {
-        $data   = Movie::latest()->paginate(5);
+        $validator = Validator::make($req->all(), [
+            'operator'      => 'required|in:>,<,=,All',
+            'rating'        => 'required|numeric|between:0,99.99',
+        ]);
 
-        return new ApiResource(true, 'List Data', $data);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $data   = Movie::latest();
+
+        if (request('rating') == 'All') {
+            $data->where('rating', request('operator'), request('rating'));
+        }
+        
+        return new ApiResource(true, 'List Data', $data->paginate(5));
     }
 
     public function store(Request $req)
